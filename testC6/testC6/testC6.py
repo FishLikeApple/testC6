@@ -81,9 +81,10 @@ def segmented_evaluation(sess, evaluation_step, is_validation=True, segment_size
 
 def training_start():  #主要函数
 
-    #下面创建inception_v3模型的结构和其所有变量。这里我没有with arg_scope，不过以后项目规模大了可能会需要用到它。
-    logits, _ = inception_v3.inception_v3(images, number_of_calsses)
-
+    #下面创建inception_v3模型的结构和其所有变量。
+    with slim.arg_scope(inception_v3.inception_v3_arg_scope()):
+        logits, _ = inception_v3.inception_v3(images, number_of_calsses)
+        
     for var in tf.trainable_variables():  #区分可训练变量
             if var.op.name.startswith(trainable_scopes[0]) or var.op.name.startswith(trainable_scopes[1]): 
                 tf.add_to_collection("trainable_variables_for_now", var)
